@@ -2,6 +2,9 @@
 
 use App\Http\Controllers\Api\Auth\AuthController;
 use App\Http\Controllers\Api\Auth\EmailVerificationController;
+use App\Http\Controllers\Api\pages\CategoriesController;
+use App\Http\Controllers\Api\pages\HomePageController;
+use App\Http\Controllers\Api\pages\ItemsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -52,3 +55,24 @@ Route::post('reset-password', [NewPasswordController::class, 'reset']); // updat
 // OTP Verification Code 
 Route::any('sendOtp', [EmailVerificationController::class, 'sendOtp']);
 Route::post('loginWithOtp', [EmailVerificationController::class, 'loginWithOtp']); // check if the otp and email is OK.
+
+// CategoriesController
+Route::get('/getallcategories', [CategoriesController::class, 'getallcategories']);
+Route::post('/insertcategory', [CategoriesController::class, 'insertcategory']);
+
+
+
+// itemsController
+Route::any('/getallitems', [ItemsController::class, 'getallitems']);
+Route::post('/insertitem', [ItemsController::class, 'insertitem']);
+
+// Route::any('/getitemsbycategory/{category_}', [ItemsController::class, 'getitemsbycategory']);
+
+Route::any('/favorite_users_items/{users_id}/{categories_id}/{items_id}', [ItemsController::class, 'favorite_users_items']);
+
+
+
+
+
+// HomePageController
+Route::any('/getalldata', [HomePageController::class, 'getalldata']);

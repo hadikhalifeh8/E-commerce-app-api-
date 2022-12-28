@@ -142,10 +142,12 @@ public function getallusers()
            [
                //'message'=>'Logged in baby',
                'status' => 'success',   
-               'data'=> [
-                   'user'=> $request->user(),
-                   //'token'=> $token->plainTextToken
-               ]
+            //    'data'=> [
+            //        'user'=> $request->user(),
+            //        //'token'=> $token->plainTextToken
+            //    ]
+            'data'  =>  $user
+
            ]);
         }
         else{
