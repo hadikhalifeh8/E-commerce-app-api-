@@ -32,8 +32,8 @@ class ItemsController extends Controller
         if($cat){
         $items = items::with('category_rltn')->where('category_id',$cat->id)->get();
 
-        
-      
+        if($items->count()> 0)
+           {
             return response()->json([
                 'status' => 'success',
                 'data' => $items,
@@ -41,35 +41,13 @@ class ItemsController extends Controller
      } else{
         return response()->json([
             'status' => 'failure',
-            'data' => "no category found",
+            'data' => "no items found",
         ]);
      } 
-        
+    } 
     }
-/************************************************************************************************************ */
 
-    public function favorite_users_items($users_id, $categories_id, $items_id) // with favorite 
-    {
-        $category = categories::where('id',$categories_id)->first();
-        $users = User::where('id', $users_id)->first();
-        $items = items::with('category_rltn')->where('id', $items_id)->first();
-       
-        $favorite = favorite::with('user_rltn')->with('item_rltn')
-                              ->where('users_id', $users->id)->where('items_id', $items->id)
-                              ->get();
-         
-        // $mixs = ($users && $items && $favorite);
-        
-        
-    
-        return response()->json([
-            'status' => 'success',
-             // 'data' => $mixs,
-            'data' => $favorite,
-           // 'data1' => $items->category_rltn,
-        ]);
-    }
-/***************************************************************************************************** */    
+
 
 
     public function insertitem(Request $request)
@@ -118,13 +96,8 @@ class ItemsController extends Controller
         'data' => $items,
     ]);
 
-}
-    }
-
-
-
-
-
+   }
+  }
 
 
 

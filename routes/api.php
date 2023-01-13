@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\Auth\AuthController;
 use App\Http\Controllers\Api\Auth\EmailVerificationController;
 use App\Http\Controllers\Api\pages\CategoriesController;
+use App\Http\Controllers\Api\pages\FavoriteController;
 use App\Http\Controllers\Api\pages\HomePageController;
 use App\Http\Controllers\Api\pages\ItemsController;
 use Illuminate\Http\Request;
@@ -53,11 +54,14 @@ Route::post('reset-password', [NewPasswordController::class, 'reset']); // updat
 
 
 // OTP Verification Code 
-Route::any('sendOtp', [EmailVerificationController::class, 'sendOtp']);
+Route::any('sendOtp', [EmailVerificationController::class, 'sendOtp']); // resend otp /...
 Route::post('loginWithOtp', [EmailVerificationController::class, 'loginWithOtp']); // check if the otp and email is OK.
 
+
+
+
 // CategoriesController
-Route::get('/getallcategories', [CategoriesController::class, 'getallcategories']);
+Route::any('/getallcategories', [CategoriesController::class, 'getallcategories']);
 Route::post('/insertcategory', [CategoriesController::class, 'insertcategory']);
 
 
@@ -65,10 +69,20 @@ Route::post('/insertcategory', [CategoriesController::class, 'insertcategory']);
 // itemsController
 Route::any('/getallitems', [ItemsController::class, 'getallitems']);
 Route::post('/insertitem', [ItemsController::class, 'insertitem']);
+Route::any('/getitemsbycategory/{category_}', [ItemsController::class, 'getitemsbycategory']);
 
-// Route::any('/getitemsbycategory/{category_}', [ItemsController::class, 'getitemsbycategory']);
 
-Route::any('/favorite_users_items/{users_id}/{categories_id}/{items_id}', [ItemsController::class, 'favorite_users_items']);
+
+ // FavoriteController
+Route::any('/addfavorite/{usersid}/{itemsid}', [FavoriteController::class, 'addfavorite']);
+Route::any('/deletefavorite/{usersid}/{itemsid}', [FavoriteController::class, 'deletefavorite']);
+
+Route::any('/myfavorite/{usersid}', [FavoriteController::class, 'myfavorite']); // show {my favorite} to each user 
+Route::any('/deletemyfavorite/{favoriteid}', [FavoriteController::class, 'deletemyfavorite']); // show {my favorite} to each user 
+
+
+
+
 
 
 

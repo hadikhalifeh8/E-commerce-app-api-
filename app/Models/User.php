@@ -28,6 +28,13 @@ class User extends Authenticatable implements MustVerifyEmail
         'verify_code'
     ];
 
+    // علاقة المستخدمين مع الأصناف 
+    public function items_rltn()
+    {
+         //                               model       ,table_name
+        return $this->belongsToMany('App\Models\items','favorite');
+    }
+
     /**
      * The attributes that should be hidden for serialization.
      *

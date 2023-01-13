@@ -20,4 +20,14 @@ class items extends Model
     {
         return $this->belongsTo('App\Models\categories', 'category_id');
     }
+
+
+  
+
+      // علاقة المستخدمين مع الأصناف 
+      public function users_rltn()
+      {
+           //                               model       ,table_name / pivote Table
+          return $this->belongsToMany('App\Models\User','favorite');
+      }
 }

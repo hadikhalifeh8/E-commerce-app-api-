@@ -16,9 +16,11 @@ return new class extends Migration
         Schema::create('favorite', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('users_id')->unsigned();
+            
             $table->bigInteger('items_id')->unsigned();
 
             $table->foreign('users_id')->references('id')->on('users')->onDelete('cascade');
+            
             $table->foreign('items_id')->references('id')->on('items')->onDelete('cascade');
 
             $table->timestamps();
