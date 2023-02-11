@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\Auth\AuthController;
 use App\Http\Controllers\Api\Auth\EmailVerificationController;
+use App\Http\Controllers\Api\pages\CartController;
 use App\Http\Controllers\Api\pages\CategoriesController;
 use App\Http\Controllers\Api\pages\FavoriteController;
 use App\Http\Controllers\Api\pages\HomePageController;
@@ -77,8 +78,19 @@ Route::any('/getitemsbycategory/{category_}', [ItemsController::class, 'getitems
 Route::any('/addfavorite/{usersid}/{itemsid}', [FavoriteController::class, 'addfavorite']);
 Route::any('/deletefavorite/{usersid}/{itemsid}', [FavoriteController::class, 'deletefavorite']);
 
-Route::any('/myfavorite/{usersid}', [FavoriteController::class, 'myfavorite']); // show {my favorite} to each user 
-Route::any('/deletemyfavorite/{favoriteid}', [FavoriteController::class, 'deletemyfavorite']); // show {my favorite} to each user 
+Route::any('/myfavorite/{usersid}', [FavoriteController::class, 'myfavorite']); // show {my favorite} to specific user 
+Route::any('/deletemyfavorite/{favoriteid}', [FavoriteController::class, 'deletemyfavorite']); // show {my favorite} to specific user 
+
+
+// CartController
+Route::any('/addtocart/{usersid}/{itemsid}', [CartController::class, 'addtocart']);
+Route::any('/deletecart/{usersid}/{itemsid}', [CartController::class, 'deletecart']);
+Route::any('/getItemsCount/{usersid}/{itemsid}', [CartController::class, 'getItemsCount']);
+Route::any('/cartView/{usersid}', [CartController::class, 'cartView']); 
+
+
+
+
 
 
 

@@ -35,6 +35,18 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->belongsToMany('App\Models\items','favorite');
     }
 
+
+
+    /***********************************************************************  */
+      // علاقة المستخدمين مع الأصناف 
+      public function carts_rltn()
+      {
+           //                               model       ,table_name
+          return $this->belongsToMany('App\Models\items','_carts');
+      }
+
+
+
     /**
      * The attributes that should be hidden for serialization.
      *

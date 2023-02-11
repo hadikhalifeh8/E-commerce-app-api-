@@ -30,4 +30,13 @@ class items extends Model
            //                               model       ,table_name / pivote Table
           return $this->belongsToMany('App\Models\User','favorite');
       }
+
+ /*************************************************** */
+
+        // علاقة المستخدمين مع الأصناف 
+        public function userscart_rltn()
+        {
+             //                               model       ,table_name / pivote Table
+            return $this->belongsToMany('App\Models\User','_carts');
+        }
 }
