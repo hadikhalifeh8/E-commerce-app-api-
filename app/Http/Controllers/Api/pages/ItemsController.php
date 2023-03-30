@@ -14,8 +14,10 @@ class ItemsController extends Controller
 {
     public function getallitems()
     {
-        //   $items = items::all();
-         $items = items::with('category_rltn')->get();
+           //$items = items::all();
+
+        $items = items::with('category_rltn')->get();
+      
 
         return response()->json([
             'status' => 'success',
@@ -87,7 +89,11 @@ class ItemsController extends Controller
             $items->count = $request->count;
             $items->price = $request->price;
             $items->discount = $request->discount;
+            $items->itemspricediscount = ($request->price-($request->price * $request->discount / 100));
 
+
+
+ 
             $items->save();
     
 
@@ -98,6 +104,74 @@ class ItemsController extends Controller
 
    }
   }
+
+
+
+  public function searchitem(Request $request)
+  {
+
+    // $searchTerm = $request->input('q');
+
+    // $items = items::where('name_en','LIKE','%'.$searchTerm.'%')->get();
+
+    // return response()->json([
+    //     'items' => $items
+    // ]);
+
+
+      $searchitems = items::orderBy('id','Desc')
+                          ->where('name_en','LIKE','%'.$request->name_en.'%')
+                         ->where('name_ar','LIKE','%'.$request->name_ar.'%')
+                          ->get();
+    
+    
+                          if($searchitems->count() > 0)
+                                  {
+                                         return response()->json([
+                                                          'status' => 'success',
+                                                          'data' => $searchitems,
+                                                      ]);
+                        
+                                   }  else{
+                                      return response()->json([
+                                          'status' => 'failure',
+                                          'data' => 'No Data found',
+                                      ]);
+                                   }       
+                                }      
+
+   
+//   public function searchitem($search)
+//   {
+//     $searchitems = items::orderBy('id','Desc')
+//                         ->where('name_en','LIKE','%'.$search.'%')
+//                         ->orwhere('name_ar','LIKE','%'.$search.'%')
+//                         ->get();
+    
+//     if($searchitems->count() > 0)
+//         {
+//                return response()->json([
+//                                 'status' => 'success',
+//                                 'data' => $searchitems,
+//                             ]);
+
+//          }  else{
+//             return response()->json([
+//                 'status' => 'failure',
+//                 'data' => 'No Data found',
+//             ]);
+//          }               
+//   }
+
+
+
+
+
+
+
+
+
+
 
 
 

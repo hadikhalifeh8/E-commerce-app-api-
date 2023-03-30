@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\Auth\AuthController;
 use App\Http\Controllers\Api\Auth\EmailVerificationController;
+use App\Http\Controllers\Api\pages\AddressController;
 use App\Http\Controllers\Api\pages\CartController;
 use App\Http\Controllers\Api\pages\CategoriesController;
 use App\Http\Controllers\Api\pages\FavoriteController;
@@ -71,6 +72,8 @@ Route::post('/insertcategory', [CategoriesController::class, 'insertcategory']);
 Route::any('/getallitems', [ItemsController::class, 'getallitems']);
 Route::post('/insertitem', [ItemsController::class, 'insertitem']);
 Route::any('/getitemsbycategory/{category_}', [ItemsController::class, 'getitemsbycategory']);
+Route::any('/searchitem', [ItemsController::class, 'searchitem']);
+
 
 
 
@@ -87,6 +90,18 @@ Route::any('/addtocart/{usersid}/{itemsid}', [CartController::class, 'addtocart'
 Route::any('/deletecart/{usersid}/{itemsid}', [CartController::class, 'deletecart']);
 Route::any('/getItemsCount/{usersid}/{itemsid}', [CartController::class, 'getItemsCount']);
 Route::any('/cartView/{usersid}', [CartController::class, 'cartView']); 
+
+
+//AdressController
+Route::any('/add_address/{usersid}', [AddressController::class, 'addaddress']);
+Route::any('/edit_address/{usersid}', [AddressController::class, 'editaddress']);
+Route::any('/view_address/{usersid}', [AddressController::class, 'viewaddress']);
+Route::any('/delete_address/{addressid}', [AddressController::class, 'deleteaddress']);
+
+
+
+
+
 
 
 

@@ -134,7 +134,9 @@ public function cartView($usersid)
 
                  
 
-                 $sumofallItemsbyuser = cart::where('users_id',$usersid)->with('user_rltn')->with('item_rltn')->get()->sum('item_rltn.price');
+                 // $sumofallItemsbyuser = cart::where('users_id',$usersid)->with('user_rltn')->with('item_rltn')->get()->sum('item_rltn.price');
+                 $sumofallItemsbyuser = cart::where('users_id',$usersid)->with('user_rltn')->with('item_rltn')->get()->sum('item_rltn.itemspricediscount');
+
                  //$totalcountOfallitemsItemsQNTY = cart::where('users_id',$usersid)->with('user_rltn')->with('item_rltn')->get()->sum('item_rltn.cart_qty');
                 
                 
