@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\Auth\EmailVerificationController;
 use App\Http\Controllers\Api\pages\AddressController;
 use App\Http\Controllers\Api\pages\CartController;
 use App\Http\Controllers\Api\pages\CategoriesController;
+use App\Http\Controllers\Api\pages\CouponController;
 use App\Http\Controllers\Api\pages\FavoriteController;
 use App\Http\Controllers\Api\pages\HomePageController;
 use App\Http\Controllers\Api\pages\ItemsController;
@@ -92,7 +93,7 @@ Route::any('/getItemsCount/{usersid}/{itemsid}', [CartController::class, 'getIte
 Route::any('/cartView/{usersid}', [CartController::class, 'cartView']); 
 
 
-//AdressController
+// AdressController
 Route::any('/add_address/{usersid}', [AddressController::class, 'addaddress']);
 Route::any('/edit_address/{usersid}', [AddressController::class, 'editaddress']);
 Route::any('/view_address/{usersid}', [AddressController::class, 'viewaddress']);
@@ -100,6 +101,8 @@ Route::any('/delete_address/{addressid}', [AddressController::class, 'deleteaddr
 
 
 
+// CouponController
+Route::any('/check_Coupon/{couponName}', [CouponController::class, 'checkCoupon']);
 
 
 
