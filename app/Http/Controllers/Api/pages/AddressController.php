@@ -105,7 +105,7 @@ class AddressController extends Controller
 
         $address = address::where('user_id',$usersid)->with('user_rltn')->get();
 
-        if($users) {
+        if($address->isNotEmpty()) {
             return response()->json([
                 'status' => 'success',
                 'data' => $address ,

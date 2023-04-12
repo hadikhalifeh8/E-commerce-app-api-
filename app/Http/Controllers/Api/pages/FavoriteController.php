@@ -101,13 +101,19 @@ class FavoriteController extends Controller
     $favorites = favorite::where('users_id', $usersid)->with('item_rltn')->with('user_rltn')->get();
    // $favorites->get();
 
-    if($favorites)
+    if($favorites->isNotEmpty())
     {
         return response()->json([
             'status' => 'success',
             'data' => $favorites,
-]);
+         ]);
         
+      }else{
+         return response()->json([
+            'status' => 'failure',
+            'data' => 'No Favorite Date Found',
+         ]);
+
       }
 
    }

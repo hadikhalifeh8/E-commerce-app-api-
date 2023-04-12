@@ -5,10 +5,11 @@ namespace App\Http\Controllers\Api\pages;
 use App\Http\Controllers\Controller;
 use App\Models\couponModel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class CouponController extends Controller
 {
-    public function checkCoupon($couponName)
+    public function checkCoupon($couponName , Request $request)
     { 
 
           // if name equal $couponName
@@ -23,6 +24,7 @@ class CouponController extends Controller
         //        'data' => 'No coupon name'.  $couponName ,
         //    ]);
         // }
+
  
         $now = date("Y-m-d H:i:s");
 
@@ -35,14 +37,14 @@ class CouponController extends Controller
       if($couponcheck->isNotEmpty()) {
         return response()->json([
             'status' => 'success',
-            'data' => $couponcheck , // 
+           // 'data' => $couponcheck , // 
              //'MapData' => ['data1' =>$couponcheck], // List array
             'MapData' => $couponcheck[0], // point directly to the first item {Map}
         ]);
     }else{
         return response()->json([
             'status' => 'failure',
-            'data' => 'Not coupon data found' ,
+            'MapData' => 'Not coupon data found' ,
 ]);
     }
 }

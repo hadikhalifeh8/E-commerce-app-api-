@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\pages\CouponController;
 use App\Http\Controllers\Api\pages\FavoriteController;
 use App\Http\Controllers\Api\pages\HomePageController;
 use App\Http\Controllers\Api\pages\ItemsController;
+use App\Http\Controllers\Api\pages\ordersController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -103,6 +104,15 @@ Route::any('/delete_address/{addressid}', [AddressController::class, 'deleteaddr
 
 // CouponController
 Route::any('/check_Coupon/{couponName}', [CouponController::class, 'checkCoupon']);
+
+
+// checkout / OrdersController
+// Route::any('/add_order/{usersid}/{addressid}', [ordersController::class, 'addorder']);
+
+// checkout / OrdersController
+Route::any('add_order', [ordersController::class, 'addorder']);
+Route::any('view_Pending_Order/{usersid}', [ordersController::class, 'viewPendingOrder']);
+
 
 
 

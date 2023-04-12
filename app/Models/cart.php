@@ -24,4 +24,10 @@ class cart extends Model
     {
         return $this->belongsTo('App\Models\items', 'items_id');
     }
+
+
+    public function address_rltn()
+    {
+        return $this->belongsTo('App\Models\address', 'address_id');
+    }
 }
