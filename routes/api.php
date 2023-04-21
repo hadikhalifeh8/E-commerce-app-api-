@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\pages\FavoriteController;
 use App\Http\Controllers\Api\pages\HomePageController;
 use App\Http\Controllers\Api\pages\ItemsController;
 use App\Http\Controllers\Api\pages\ordersController;
+use App\Http\Controllers\Api\pages\PushNotificationController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -116,7 +117,17 @@ Route::any('view_Pending_Order/{usersid}', [ordersController::class, 'viewPendin
 
 
 
+// Notification Controllers
+Route::post('send/{usersid}',[PushNotificationController::class, 'bulksend'])->name('bulksend');
+Route::get('all-notifications', [PushNotificationController::class, 'index']); // not used // for web only
+Route::get('get-notification-form', [PushNotificationController::class, 'create']); // not used // for web only
+Route::any('get_Notification/{usersid}',[PushNotificationController::class, 'getNotification']);
 
+
+
+///////////////////////////////////////////// ADMIN ///////////////////////////////////////
+// to get notification to user when the admin approved for the order
+Route::any('approved_Order/{orderid}/{userid}', [ordersController::class, 'approvedOrder']);
 
 
 

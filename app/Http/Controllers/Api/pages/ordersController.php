@@ -10,8 +10,12 @@ use App\Models\ordersModel;
 use App\Models\User;
 use Illuminate\Http\Request;
 
+use App\Http\Controllers\Api\pages\PushNotificationController;
+
 class ordersController extends Controller
 {
+
+
 
  // CheckOut order
     public function addorder(Request $request)
@@ -29,7 +33,8 @@ class ordersController extends Controller
 
               // total_price
       
-              $now = date("Y-m-d H:i:s");
+              $now = date("Y-m-d H:i:s A");
+            //   $now = date("l jS \of F Y h:i:s A");
         $couponcheck = couponModel::where('id',$request->used_coupon)
                                   ->where('expiry_date','>',$now)
                                   ->where('count','>',0)
@@ -124,16 +129,64 @@ class ordersController extends Controller
                                     'data' => 'No Data Inserted',
                                 ]);
             }
-
-             
-               
-                
-
     }
 
 
 
+    ////////////////////////////////// ADMIN /////////////////////////////////////
+
+    // in flutter function fbcmConfig.dart;
+    // to get notification to user when the admin approved for the order
+  public function approvedOrder($orderid, $userid,Request $request ) 
+  {
+    $orders = ordersModel::find($orderid);
+    $users = User::find($userid);
+
+       
+ 
+    if(!( $orders && $users)) {
+                  return response()->json([
+                         'status' => 'failure',
+                         'data' => 'Not found this order-id ' . $orderid. 'this user-id ' .$userid   ,
+               ]);
+             }
+
+     $approveorder = ordersModel::where('id',$orderid)
+                                ->where('user_id',$userid) 
+                               // ->where('status',0)
+                                  ->update(['status'=> 1]);      
+
+        //   $result = (new TestController)->exampleFunction();  
+        $notification = (new PushNotificationController)->bulksend(
+             $userid,
+             "success", //PushNotification(bulksend) لي بال  requset نفس ال 
+             "The Order has been Approved", //PushNotification(bulksend) لي بال  requset نفس ال 
+             "users$userid", 
+             "",
+             "refreshorderpending"
+
+        );
+            
+           
+        if(!( $approveorder)) {
+            return response()->json([
+                   'status' => 'success',
+                   'data' => $approveorder ,
+                   'datas' => $userid
+         ]);
+       }
+      
+        
+             
+        }
+
+
+
+
+
+
 }
+
 
 
 
