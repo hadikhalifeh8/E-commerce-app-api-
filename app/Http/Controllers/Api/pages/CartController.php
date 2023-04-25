@@ -122,8 +122,10 @@ public function cartView($usersid)
 
     // bjeeb bs row 1 men lmkarareen bl table ({id=1/usersid=1/itemsid=2} / {id=2/usersid=1/itemsid=2}) bjeble bs row 1
       $cart = cart::where('users_id',$usersid)
-                 ->with('user_rltn')->with('item_rltn')->distinct()
-                 ->get('items_id');
+                 ->with('user_rltn')->with('item_rltn')->with('order_rltn')->distinct()
+                  ->get('items_id');
+               // ->get();
+
                 
                 
  //$items = items::with('userscart_rltn')->get();

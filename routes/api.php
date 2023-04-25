@@ -113,6 +113,7 @@ Route::any('/check_Coupon/{couponName}', [CouponController::class, 'checkCoupon'
 // checkout / OrdersController
 Route::any('add_order', [ordersController::class, 'addorder']);
 Route::any('view_Pending_Order/{usersid}', [ordersController::class, 'viewPendingOrder']);
+Route::any('details_Order/{orderid}', [ordersController::class, 'detailsOrder']);
 
 
 
@@ -128,6 +129,8 @@ Route::any('get_Notification/{usersid}',[PushNotificationController::class, 'get
 ///////////////////////////////////////////// ADMIN ///////////////////////////////////////
 // to get notification to user when the admin approved for the order
 Route::any('approved_Order/{orderid}/{userid}', [ordersController::class, 'approvedOrder']);
+
+
 
 
 

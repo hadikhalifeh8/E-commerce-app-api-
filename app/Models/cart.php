@@ -26,8 +26,8 @@ class cart extends Model
     }
 
 
-    public function address_rltn()
+    public function order_rltn()
     {
-        return $this->belongsTo('App\Models\address', 'address_id');
+        return $this->belongsTo('App\Models\ordersModel', 'order_id');
     }
 }

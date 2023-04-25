@@ -116,7 +116,7 @@ class ordersController extends Controller
                             'data' => 'Not found this userid ' . $usersid  ,
                   ]);
                 } 
-            $view_orders = ordersModel::where('user_id',$usersid)->get();  
+            $view_orders = ordersModel::where('user_id',$usersid)->with('address_rltn')->get();  
             
       if($view_orders->isNotEmpty()) {
                 return response()->json([
@@ -131,13 +131,33 @@ class ordersController extends Controller
             }
     }
 
+ 
+    // get the orders by cart
+    public function detailsOrder($orderid)
+    {
+        
+       $cart = cart::where('order_id',$orderid)
+                     ->with('user_rltn')
+                     ->with('item_rltn')
+                     ->with('order_rltn')
+              ->get();
+
+       if($cart) {
+        return response()->json([
+               'status' => 'success',
+               'data' => $cart ,
+               
+     ]);
+   }
+    }
+
 
 
     ////////////////////////////////// ADMIN /////////////////////////////////////
 
     // in flutter function fbcmConfig.dart;
     // to get notification to user when the admin approved for the order
-  public function approvedOrder($orderid, $userid,Request $request ) 
+  public function approvedOrder($orderid, $userid) 
   {
     $orders = ordersModel::find($orderid);
     $users = User::find($userid);
