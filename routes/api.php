@@ -114,6 +114,8 @@ Route::any('/check_Coupon/{couponName}', [CouponController::class, 'checkCoupon'
 Route::any('add_order', [ordersController::class, 'addorder']);
 Route::any('view_Pending_Order/{usersid}', [ordersController::class, 'viewPendingOrder']);
 Route::any('details_Order/{orderid}', [ordersController::class, 'detailsOrder']);
+Route::any('delete_Order/{orderid}', [ordersController::class, 'deleteOrder']);
+
 
 
 

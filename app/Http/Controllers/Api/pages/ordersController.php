@@ -152,6 +152,39 @@ class ordersController extends Controller
     }
 
 
+  // delete the order where status =>Await Approve (Only)   
+  public function deleteOrder($orderid)
+  {
+    $orders = ordersModel::find($orderid);
+       
+ 
+    if(!( $orders)) {
+                  return response()->json([
+                         'status' => 'failure',
+                         'data' => 'Not found this order Number ' . $orderid  ,
+               ]);
+             }
+             
+        $deleteOrder = ordersModel::where('id', $orderid)->where('status',0)->delete('id');
+
+        if($deleteOrder) {
+          return response()->json([
+                 'status' => 'success',
+                 'data' => $deleteOrder ,
+       ]);
+     }else{
+      
+      
+        return response()->json([
+               'status' => 'failure',
+               'data' => "Order Not Deleted becouse the Status is not in Awit Approved" ,
+     ]);
+   
+     }
+
+  }
+
+
 
     ////////////////////////////////// ADMIN /////////////////////////////////////
 
