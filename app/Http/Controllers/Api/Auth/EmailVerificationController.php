@@ -148,7 +148,6 @@ class EmailVerificationController extends Controller
 
         
 
-
     }
 
 

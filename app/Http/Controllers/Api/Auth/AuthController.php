@@ -71,7 +71,12 @@ public function getallusers()
             
         ]);
         if($validator->fails()){
-            return response()->json($validator->errors()->toJson(), 400);
+            //return response()->json($validator->errors()->toJson(), 422);
+            return response()->json([
+            
+                'status' =>'failure', 
+                  'data'  =>  'Failure sss'
+            ]);
         }
         $user = User::create(array_merge(
                     $validator->validated(),
@@ -85,14 +90,25 @@ public function getallusers()
 
                     ]
                 ));
+                if($user == true){
                 Mail::to($request->email)->send(new Send_otp_VerifyCode($user));
              
-                $token = $user->createToken('authtoken');
+                //$token = $user->createToken('authtoken');
+                
         return response()->json([
             'status' => 'success',
-            'token'=> $token->plainTextToken,
+            //'token'=> $token->plainTextToken,
             'data' => $user
         ]);
+    }
+    // else{
+    //     return response()->json([
+            
+    //         'status' =>'failure', 
+    //           'data'  =>  'Failure sss'
+    //     ]);
+
+    // }
 
     }
 
@@ -133,8 +149,11 @@ public function getallusers()
     
 //     //if user email found and password is correct and user_approve is = 1
 
-     $user = User::where('email', $request->email)->where('user_approve',1)->first();
-         
+
+    /**  login without userapprove /(login in flutter) بال  user_approve',1 بحط ال  */
+     //$user = User::where('email', $request->email)->where('user_approve',1)->first();
+       
+        $user = User::where('email', $request->email)->first();  
          if ($user && Hash::check($request->password, $user->password)) {
 
 
@@ -142,10 +161,12 @@ public function getallusers()
            [
                //'message'=>'Logged in baby',
                'status' => 'success',   
-               'data'=> [
-                   'user'=> $request->user(),
-                   //'token'=> $token->plainTextToken
-               ]
+            //    'data'=> [
+            //        'user'=> $request->user(),
+            //        //'token'=> $token->plainTextToken
+            //    ]
+            'data'  =>  $user
+
            ]);
         }
         else{
