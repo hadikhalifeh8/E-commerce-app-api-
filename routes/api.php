@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\pages\CouponController;
 use App\Http\Controllers\Api\pages\FavoriteController;
 use App\Http\Controllers\Api\pages\HomePageController;
 use App\Http\Controllers\Api\pages\ItemsController;
+use App\Http\Controllers\Api\pages\OffersController;
 use App\Http\Controllers\Api\pages\ordersController;
 use App\Http\Controllers\Api\pages\PushNotificationController;
 use Illuminate\Http\Request;
@@ -128,6 +129,8 @@ Route::any('get_Notification/{usersid}',[PushNotificationController::class, 'get
 
 
 
+// OffersController 
+Route::any('/offers', [OffersController::class, 'offers']);
 
 
 ///////////////////////////////////////////// ADMIN ///////////////////////////////////////
