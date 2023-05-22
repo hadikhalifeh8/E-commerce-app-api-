@@ -271,6 +271,44 @@ class ordersController extends Controller
 
 
 
+public function rating_for_archive_Order($orderid, Request $request)
+{
+  $orders = ordersModel::find($orderid);
+  //$users = User::find($userid);
+
+     
+
+  if(!( $orders)) {
+                return response()->json([
+                       'status' => 'failure',
+                       'data' => 'Not found this order-id ' . $orderid   ,
+             ]);
+           }
+
+
+    // update order in cart
+    if($orders){
+      $ratingOrders = ordersModel::where('id',$orderid)
+                          //  ->where('user_id',$userid)
+                             ->update(['order_rating'=>$request->order_rating, 
+                             'order_note_rating'=>$request->order_note_rating, 
+                            ]);
+    
+      return response()->json([
+          'status' => 'success',
+          'data' => $ratingOrders,
+          ]);
+  }else{
+      return response()->json([
+                         'status' => 'failure',
+                          'data' => 'No Data Inserted',
+                      ]);
+  }
+
+  
+}
+
+
 }
 
 

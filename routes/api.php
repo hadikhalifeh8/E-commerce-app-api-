@@ -140,7 +140,8 @@ Route::any('approved_Order/{orderid}/{userid}', [ordersController::class, 'appro
 
 
 
-
+// Rating for orders
+Route::any('rating_for_archive_Order/{orderid}', [ordersController::class, 'rating_for_archive_Order']);
 
 
 
