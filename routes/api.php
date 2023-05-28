@@ -150,5 +150,8 @@ Route::any('rating_for_archive_Order/{orderid}', [ordersController::class, 'rati
 
 
 
-// HomePageController
-Route::any('/getalldata', [HomePageController::class, 'getalldata']);
+// HomePageController + top selling items
+Route::any('/getalldata', [HomePageController::class, 'getalldata']); 
+// Route::any('/topselling', [HomePageController::class, 'topselling']);
+
+
