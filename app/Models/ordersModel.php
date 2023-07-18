@@ -32,4 +32,9 @@ class ordersModel extends Model
          {
              return $this->belongsTo('App\Models\couponModel', 'used_coupon');
          }
+
+         public function delivery_rltn()
+         {
+             return $this->belongsTo('App\Models\delivery_users', 'delivery_id');
+         }
 }

@@ -38,6 +38,8 @@ class PushNotificationController extends Controller
         $dataArr = array('click_action' => 'FLUTTER_NOTIFICATION_CLICK','status'=>"done");
          $notification = array('title' =>$comment->title, 'body' => $comment->body, 'sound' => 'default', 'badge' => '1',);
         //$notification = array('title' =>"hi", 'body' => "how are you", 'topic'=> "users", 'pageid'=> $req->pageid, 'pagename'=> $req->pagename,'sound' => 'default', 'badge' => '1',);
+       // $notification = array('title' =>"hi", 'body' => "how are you", 'topic'=> "users", 'pageid'=> "", 'pagename'=> "",'sound' => 'default', 'badge' => '1',);
+
         
         $arrayToSend = array('to' => '/topics/' . $topic, 'notification' => $notification, 'data' => $dataArr, 'priority'=>'high');
         $fields = json_encode ($arrayToSend);

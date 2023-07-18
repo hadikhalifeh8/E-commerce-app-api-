@@ -12,6 +12,8 @@ use Illuminate\Http\Request;
 
 use App\Http\Controllers\Api\pages\PushNotificationController;
 
+use App\Models\delivery_users;
+
 class ordersController extends Controller
 {
 
@@ -260,17 +262,57 @@ class ordersController extends Controller
                    'data' => $approveorder ,
                    'datas' => $userid
          ]);
-       }
-      
-        
-             
+       } 
         }
 
 
 
 
+public function viewPendingOrderToAdmin()
+{
+            
+                $view_orders = ordersModel::where('status','!=','4')        
+                                          ->with('address_rltn')
+                                          ->get();  
+                
+          if($view_orders->isNotEmpty()) {
+                    return response()->json([
+                        'status' => 'success',
+                        'data' => $view_orders,
+                        ]);
+                }else{
+                    return response()->json([
+                                       'status' => 'failure',
+                                        'data' => 'No Pending Orders Data Found  ',
+                                    ]);
+                }
+}
 
 
+// archive order wher status = 4 , archive تم إستلام الطلبيه
+public function archiveOrderToAdmin()
+{
+
+       $archive_orders = ordersModel::where('status',4)                 
+                                      ->with('address_rltn')
+                                      ->get();  
+       
+ if($archive_orders->isNotEmpty()) {
+           return response()->json([
+               'status' => 'success',
+               'data' => $archive_orders,
+               ]);
+       }else{
+           return response()->json([
+                              'status' => 'failure',
+                               'data' => 'No Archive Orders Data Found',
+                           ]);
+       }
+}
+
+
+
+/************************************ADMIN*********************************************** */
 public function rating_for_archive_Order($orderid, Request $request)
 {
   $orders = ordersModel::find($orderid);
@@ -308,6 +350,315 @@ public function rating_for_archive_Order($orderid, Request $request)
   
 }
 
+
+
+
+/***************************************Delivery App************************************************ */
+
+    // 'status'=> 2
+    // send notification to delivery man that there are an order
+
+
+    // in flutter function fbcmConfig.dart;
+    // to get notification to user when the admin approved for the order
+    public function preparedtoDeliveryMan($orderid, $userid, $deliveryid) 
+    {
+      $orders = ordersModel::find($orderid);
+      $users = User::find($userid); // to send notification
+      $delivery = delivery_users::find($deliveryid); // to send notification
+  
+         
+   
+      if(!( $orders && $users)) {
+                    return response()->json([
+                           'status' => 'failure',
+                           'data' => 'Not found this order-id ' . $orderid. 'this user-id ' .$userid   ,
+                 ]);
+               }
+  
+               if(delivery_users::where('order_type',0)) // delivery
+               {
+       $approveorder = ordersModel::where('id',$orderid)
+                                  ->where('user_id',$userid) 
+                                 // ->where('status',0)
+                                    ->update(['status'=> 2]);  
+               }else {
+                $approveorder = ordersModel::where('id',$orderid) // personal 
+                                  ->where('user_id',$userid) 
+                                 // ->where('status',0)
+                                    ->update(['status'=> 4]);  
+
+               }    
+  
+          // notification for users
+
+          //   $result = (new TestController)->exampleFunction();  
+          $notification = (new PushNotificationController)->bulksend(
+               $deliveryid,
+               "warning", //PushNotification(bulksend) لي بال  requset نفس ال 
+               "There is an  Order waiting to approved", //PushNotification(bulksend) لي بال  requset نفس ال 
+               "delivery$deliveryid", 
+               "",
+               "refreshorderpending"
+  
+          );
+              
+             
+          if(!( $approveorder)) {
+              return response()->json([
+                     'status' => 'success',
+                     'data' => $approveorder ,
+                     'datas' => $userid
+           ]);
+         }
+             
+          }
+
+
+
+
+     // 'status'=> 3
+
+    // in flutter function fbcmConfig.dart;
+    // to get notification to user when the admin approved for the order
+    public function DeliveryManApproved($orderid,$userid, $deliveryid) 
+    {
+      $orders = ordersModel::find($orderid);
+      $users = User::find($userid); // to send notification
+    //  $delivery = delivery_users::find($deliveryid); // to send notification
+         
+   
+      if(!( $orders && $users )) {
+                    return response()->json([
+                           'status' => 'failure',
+                           'data' => 'Not found this order-id ' . $orderid. 'this user-id ' .$userid
+                 ]);
+               }
+  
+       $approveorder = ordersModel::where('id',$orderid)
+                                  ->where('user_id',$userid) 
+                                  ->where('status',2)
+                                    ->update(['status'=> 3, 'delivery_id' => $deliveryid]);
+                                    //->update(['delivery_id'=> $deliveryid]);     
+  
+          // notification for users
+
+          //   $result = (new TestController)->exampleFunction();  
+          // $notification = (new PushNotificationController)->bulksend(
+          //      $userid,
+          //      "success", //PushNotification(bulksend) لي بال  requset نفس ال 
+          //      "The Order is in the way", //PushNotification(bulksend) لي بال  requset نفس ال 
+          //      "users$userid", 
+          //      "",
+          //      "refreshorderpending",
+
+
+             
+          // );
+
+          // notification for delivery Man
+            //$userid;
+            // "Hi all";
+            // "success"; //PushNotification(bulksend) لي بال  requset نفس ال 
+            // "The Order /has been approved by delivery"; //PushNotification(bulksend) لي بال  requset نفس ال 
+            // "services";
+            // "";
+            // "";
+
+
+            // // send notification to all delivery man that has a specificy delivery man approve to send the order
+            // $userid;
+            // "warning"; //PushNotification(bulksend) لي بال  requset نفس ال 
+            // "The Order /has been approved by delivery.$deliveryid"; //PushNotification(bulksend) لي بال  requset نفس ال 
+            // "services";
+            // "";
+            // "";
+      
+
+               
+          if(( $approveorder > 0)) {
+              return response()->json([
+                     'status' => 'success',
+                     'data' => $approveorder ,
+                     // 'datas' => $userid
+           ]);
+        }
+        
+          
+               
+          }
+
+
+
+         // 'status'=> 4
+
+    // in flutter function fbcmConfig.dart;
+    // to get notification to user when the admin approved for the order
+    public function done($orderid, $userid) 
+    {
+      $orders = ordersModel::find($orderid);
+      $users = User::find($userid); // to send notification
+      
+  
+         
+   
+      if(!( $orders && $users)) {
+                    return response()->json([
+                           'status' => 'failure',
+                           'data' => 'Not found this order-id ' . $orderid. 'this user-id ' .$userid   ,
+                 ]);
+               }
+  
+       $approveorder = ordersModel::where('id',$orderid)
+                                  ->where('user_id',$userid) 
+                                  ->where('status',3)
+                                    ->update(['status'=> 4]);      
+  
+          // notification for users
+ 
+          //   $result = (new TestController)->exampleFunction();  
+          $notification = (new PushNotificationController)->bulksend(
+               $userid,
+               "success", //PushNotification(bulksend) لي بال  requset نفس ال 
+               "Your Order Has Been Delivered", //PushNotification(bulksend) لي بال  requset نفس ال 
+               "users$userid", 
+               "",
+               "refreshorderpending"
+
+          );
+
+          // notification for delivery Man
+            
+            "Warning"; //PushNotification(bulksend) لي بال  requset نفس ال 
+            "The Order /has been delivered to the customer"; //PushNotification(bulksend) لي بال  requset نفس ال 
+            "services";
+            "";
+            "";
+
+      
+
+               
+          if(( $approveorder)) {
+              return response()->json([
+                     'status' => 'success',
+                     'data' => $approveorder ,
+                    // 'datas' => $userid
+           ]);
+         }else{
+          return response()->json([
+                             'status' => 'failure',
+                              'data' => 'No Done Orders Data Found  ',
+                          ]);
+      }
+           
+}
+
+
+
+
+public function viewPendingOrderToDeliveryMan()
+{
+   // $delivery = delivery_users::find($delivery_id);
+   
+
+  //  if(!( $delivery)) {
+  //                return response()->json([
+  //                       'status' => 'failure',
+  //                       'data' => 'Not found this userid ' . $delivery_id  ,
+  //             ]);
+  //           } 
+        $view_orders = ordersModel::where('status','2')
+                       ->Where('order_type','0')
+                       //->where('delivery_id',$delivery_id)
+                       ->with('address_rltn')
+                       ->with('delivery_rltn')
+
+                       ->get();  
+        
+  if($view_orders->isNotEmpty()) {
+            return response()->json([
+                'status' => 'success',
+                'data' => $view_orders,
+                ]);
+        }else{
+            return response()->json([
+                               'status' => 'failure',
+                                'data' => 'No Pending Orders Data Found  ',
+                            ]);
+        }
+}
+
+
+////////////////////////////////// Accepted Orders /////////////////////////////////
+
+public function viewAcceptedOrderToDeliveryMan($delivery_id)
+{
+  $delivery = delivery_users::find($delivery_id);
+
+  if(!( $delivery)) {
+    return response()->json([
+           'status' => 'failure',
+           'data' => 'Not found this delivery ' . $delivery ,
+ ]);
+}
+
+
+       $view_Accepted_orders = ordersModel::where('status','3')
+                                            ->Where('order_type','0')
+                                            ->where('delivery_id',$delivery_id)
+                                            ->with('address_rltn')
+                                            ->with('delivery_rltn')
+
+                                            ->get();
+
+      if($view_Accepted_orders->isNotEmpty()) {
+        return response()->json([
+            'status' => 'success',
+            'data' => $view_Accepted_orders,
+            ]);
+    }else{
+        return response()->json([
+                           'status' => 'failure',
+                            'data' => 'No Accepted Orders Data Found  ',
+                        ]);
+    }                                  
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// archive order wher status = 4 , archive تم إستلام الطلبيه
+public function archiveOrderToDeliveryMan($delivery_id)
+{
+
+       $archive_orders = ordersModel::where('status',4)
+                                      ->with('delivery_id',$delivery_id)                 
+                                      ->with('address_rltn')
+                                      ->get();  
+       
+ if($archive_orders->isNotEmpty()) {
+           return response()->json([
+               'status' => 'success',
+               'data' => $archive_orders,
+               ]);
+       }else{
+           return response()->json([
+                              'status' => 'failure',
+                               'data' => 'No Archive Orders Data Found',
+                           ]);
+       }
+}
 
 }
 

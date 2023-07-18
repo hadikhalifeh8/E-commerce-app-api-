@@ -7,6 +7,7 @@ use App\Models\cart;
 use App\Models\categories;
 use App\Models\favorite;
 use App\Models\items;
+use App\Models\TextSettingsModel;
 use Illuminate\Http\Request;
 
 class HomePageController extends Controller
@@ -26,6 +27,8 @@ class HomePageController extends Controller
         // ]);
 
         $categories = categories::all();
+        $textSettings = TextSettingsModel::all();
+         $iitems = items::all();
         
         // top selling
         // get only row if have a same items_id
@@ -37,7 +40,11 @@ class HomePageController extends Controller
             return response()->json([
                 'status' => 'success',
                 'categories' => $categories,
+                'textSettings' => $textSettings,
+
                 'items' => $countitems,
+               // 'iitems' => $iitems,
+
              ]);
             
           }else{

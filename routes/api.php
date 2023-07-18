@@ -2,10 +2,13 @@
 
 use App\Http\Controllers\Api\Auth\AuthController;
 use App\Http\Controllers\Api\Auth\EmailVerificationController;
+use App\Http\Controllers\Api\Auth\NewPasswordController;
+use App\Http\Controllers\Api\Delivery\DeliveryAuthController;
 use App\Http\Controllers\Api\pages\AddressController;
 use App\Http\Controllers\Api\pages\CartController;
 use App\Http\Controllers\Api\pages\CategoriesController;
 use App\Http\Controllers\Api\pages\CouponController;
+
 use App\Http\Controllers\Api\pages\FavoriteController;
 use App\Http\Controllers\Api\pages\HomePageController;
 use App\Http\Controllers\Api\pages\ItemsController;
@@ -137,8 +140,14 @@ Route::any('/offers', [OffersController::class, 'offers']);
 // to get notification to user when the admin approved for the order
 Route::any('approved_Order/{orderid}/{userid}', [ordersController::class, 'approvedOrder']);
 
+// get all orders for all users
+Route::any('view_Pending_Order_To_Admin', [ordersController::class, 'viewPendingOrderToAdmin']);
+// archive orders
+Route::any('archive_Order_To_Admin',[ordersController::class, 'archiveOrderToAdmin']);
 
 
+
+///////////////////////////////////////////// ADMIN ///////////////////////////////////////
 
 // Rating for orders
 Route::any('rating_for_archive_Order/{orderid}', [ordersController::class, 'rating_for_archive_Order']);
@@ -155,3 +164,36 @@ Route::any('/getalldata', [HomePageController::class, 'getalldata']);
 // Route::any('/topselling', [HomePageController::class, 'topselling']);
 
 
+
+
+/**************************************************************************************** */
+        //********* */ Delivery Users Api  //********* */
+
+ Route::post('delivery_login', [DeliveryAuthController::class, 'delivery_login']);
+
+ // OTP Verification Code 
+Route::any('Delivery_sendOtp', [DeliveryAuthController::class, 'sendOtp']); // resend otp /...
+Route::post('Delivery_loginWithOtp', [DeliveryAuthController::class, 'loginWithOtp']); // check if the otp and email is OK.
+Route::post('Delivery_reset-password', [DeliveryAuthController::class, 'reset']); // update password 
+
+//  status=>2 عمليه تحضير/ تجهيز الطلب لعامل الدليفري
+Route::any('preparedtoDeliveryMan/{orderid}/{userid}', [ordersController::class, 'preparedtoDeliveryMan']);
+
+//  status=>3  معين  انو يوصلها(واحد) delivery المرحله التي يوافق عليها عامل 
+Route::any('Delivery_Man_Approved/{orderid}/{userid}/{deliveryid}', [ordersController::class, 'DeliveryManApproved']);
+
+
+//  status=> 4  مرحلة تسليم الطلب 
+Route::any('done/{orderid}/{userid}', [ordersController::class, 'done']);
+
+
+
+// 
+Route::any('view_Pending_Order_To_DeliveryMan', [ordersController::class, 'viewPendingOrderToDeliveryMan']);
+
+// accepted Orders (where status =>3)
+Route::any('view_Accepted_Order_To_DeliveryMan/{delivery_id}', [ordersController::class, 'viewAcceptedOrderToDeliveryMan']);
+
+
+
+Route::any('archive_Order_To_DeliveryMan/{delivery_id}',[ordersController::class, 'archiveOrderToDeliveryMan']);
