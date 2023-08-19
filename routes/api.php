@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\Admin_App\AdminController;
 use App\Http\Controllers\Api\Auth\AuthController;
 use App\Http\Controllers\Api\Auth\EmailVerificationController;
 use App\Http\Controllers\Api\Auth\NewPasswordController;
@@ -71,13 +72,21 @@ Route::post('loginWithOtp', [EmailVerificationController::class, 'loginWithOtp']
 
 // CategoriesController
 Route::any('/getallcategories', [CategoriesController::class, 'getallcategories']);
-Route::post('/insertcategory', [CategoriesController::class, 'insertcategory']);
+Route::any('/insertcategory', [CategoriesController::class, 'insertcategory']);
+Route::any('/updatecategory/{category_id}', [CategoriesController::class, 'updatecategory']);
+Route::any('/deletecategory/{category_id}', [CategoriesController::class, 'deletecategory']);
+
+
 
 
 
 // itemsController
 Route::any('/getallitems', [ItemsController::class, 'getallitems']);
-Route::post('/insertitem', [ItemsController::class, 'insertitem']);
+Route::any('/insertitem', [ItemsController::class, 'insertitem']);
+Route::any('/updateitem/{item_id}', [ItemsController::class, 'updateitem']);
+Route::any('/deleteitem/{item_id}', [ItemsController::class, 'deleteitem']);
+
+
 Route::any('/getitemsbycategory/{category_}', [ItemsController::class, 'getitemsbycategory']);
 Route::any('/searchitem', [ItemsController::class, 'searchitem']);
 
@@ -197,3 +206,17 @@ Route::any('view_Accepted_Order_To_DeliveryMan/{delivery_id}', [ordersController
 
 
 Route::any('archive_Order_To_DeliveryMan/{delivery_id}',[ordersController::class, 'archiveOrderToDeliveryMan']);
+
+
+
+
+
+
+/*******************************************Start Admin************************************* */
+Route::post('Admin_register', [AdminController::class, 'Admin_register']);
+Route::post('Admin_login', [AdminController::class, 'Admin_login']);
+
+ // OTP Verification Code 
+Route::any('Admin_sendOtp', [AdminController::class, 'Admin_sendOtp']); // resend otp /...
+Route::post('Admin_loginWithOtp', [AdminController::class, 'Admin_loginWithOtp']); // check if the otp and email is OK.
+Route::post('Admin_reset-password', [AdminController::class, 'Admin_reset_password']); // update password
