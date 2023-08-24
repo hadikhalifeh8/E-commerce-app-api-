@@ -110,22 +110,22 @@ class ItemsController extends Controller
 
    public function updateitem(Request $request,$item_id)
    {
-    $validator = Validator::make($request->all(), [
+    // $validator = Validator::make($request->all(), [
           
-        'category_id' => 'required',
-        'name_ar' => 'required|string',
-        'name_en' => 'required|string',
-        'description_ar' => 'required|string',
-        'description_en' => 'required|string',
-        'image' => 'required|image|mimes:jpg,jpeg,png,svg',
-        'count' => 'required',
-        'price' => 'required',
-        'discount' => 'required',
+    //     'category_id' => 'required',
+    //     'name_ar' => 'required|string',
+    //     'name_en' => 'required|string',
+    //     'description_ar' => 'required|string',
+    //     'description_en' => 'required|string',
+    //     'image' => 'required|image|mimes:jpg,jpeg,png,svg',
+    //     'count' => 'required',
+    //     'price' => 'required',
+    //     'discount' => 'required',
         
-    ]);
-    if($validator->fails()){
-        return response()->json($validator->errors()->toJson(), 400);
-    }
+    // ]);
+    // if($validator->fails()){
+    //     return response()->json($validator->errors()->toJson(), 400);
+    // }
      
 
     $item = items::find($item_id);
@@ -139,6 +139,23 @@ class ItemsController extends Controller
                              ]);
      }
 
+     // if update without image 
+
+     $item->category_id = $request->category_id;
+     $item->name_ar = $request->name_ar;
+     $item->name_en = $request->name_en;
+     $item->description_ar = $request->description_ar;
+     $item->description_en = $request->description_en;
+
+     $item->count = $request->count;
+     $item->active = $request->active;
+     $item->price = $request->price;
+     $item->discount = $request->discount;
+     $item->itemspricediscount = ($request->price-($request->price * $request->discount / 100));
+    //  $item->favorite = $request->favorite;
+    //  $item->cart_qty = $request->cart_qty;
+
+
 
      if($request->hasfile('image'))
      {
@@ -147,34 +164,20 @@ class ItemsController extends Controller
 
      $file = $request->file('image')  ;
          
- $name = $file->getClientOriginalName();
- $file->storeAs('attachments/items/', $file->getClientOriginalName(),'upload_attachments');
-
-
+     $name = $file->getClientOriginalName();
+     $file->storeAs('attachments/items/', $file->getClientOriginalName(),'upload_attachments');
 
     /*  $item->update([*/
 
-            $item->category_id = $request->category_id;
-            $item->name_ar = $request->name_ar;
-            $item->name_en = $request->name_en;
-            $item->description_ar = $request->description_ar;
-            $item->description_en = $request->description_en;
             $item->image = $name ;
-            $item->count = $request->count;
-            $item->active = $request->active;
-            $item->price = $request->price;
-            $item->discount = $request->discount;
-            $item->itemspricediscount = ($request->price-($request->price * $request->discount / 100));
-            $item->favorite = $request->favorite;
-            $item->cart_qty = $request->cart_qty;
-
+        
+        }
 
 
              $item->save();
-            //   dd($item),
+            
      
-     
-        // ]);
+
  
 
        
@@ -193,7 +196,7 @@ class ItemsController extends Controller
 
 }
 
-}
+
    }
 
 
