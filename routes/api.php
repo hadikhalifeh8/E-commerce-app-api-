@@ -146,14 +146,31 @@ Route::any('/offers', [OffersController::class, 'offers']);
 
 
 ///////////////////////////////////////////// ADMIN ///////////////////////////////////////
-// to get notification to user when the admin approved for the order
+
+// 1- get all orders for all users where status =0
+Route::any('view_Pending_Order_To_Admin', [ordersController::class, 'viewPendingOrderToAdmin']);
+
+ // 2- get all orders where status !=0 (not pending), and status !=4 (not done)
+Route::any('view_Accepted_Orders_To_Admin', [ordersController::class, 'viewAcceptedOrdersToAdmin']);
+
+// 3- get notification to user when the admin approved for the order
 Route::any('approved_Order/{orderid}/{userid}', [ordersController::class, 'approvedOrder']);
 
-// get all orders for all users
-Route::any('view_Pending_Order_To_Admin', [ordersController::class, 'viewPendingOrderToAdmin']);
-// archive orders
+
+
+
+
+
+Route::any('prepared_Orders_Show/{orderid}/{userid}/', [ordersController::class, 'preparedOrdersShow']);
+
+
+
+// archive orders where('status',4)
 Route::any('archive_Order_To_Admin',[ordersController::class, 'archiveOrderToAdmin']);
 
+
+//checkout / OrdersController بستخدم اللي فوق نقس الشي الي بال 
+// Route::any('details_Order/{orderid}', [ordersController::class, 'detailsOrder']);
 
 
 ///////////////////////////////////////////// ADMIN ///////////////////////////////////////

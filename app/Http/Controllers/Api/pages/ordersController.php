@@ -119,7 +119,7 @@ class ordersController extends Controller
                   ]);
                 } 
             $view_orders = ordersModel::where('user_id',$usersid)
-                           ->where('status','!=','4')
+                           ->where('status','!=','4') //lam tasel ba3d ela mar7alet l archive
                            ->with('address_rltn')
                            ->get();  
             
@@ -245,33 +245,38 @@ class ordersController extends Controller
                                   ->update(['status'=> 1]);      
 
         //   $result = (new TestController)->exampleFunction();  
-        $notification = (new PushNotificationController)->bulksend(
-             $userid,
-             "success", //PushNotification(bulksend) لي بال  requset نفس ال 
-             "The Order has been Approved", //PushNotification(bulksend) لي بال  requset نفس ال 
-             "users$userid", 
-             "",
-             "refreshorderpending"
+        // $notification = (new PushNotificationController)->bulksend(
+        //      $userid,
+        //      "success", //PushNotification(bulksend) لي بال  requset نفس ال 
+        //      "The Order has been Approved", //PushNotification(bulksend) لي بال  requset نفس ال 
+        //      "users$userid", 
+        //      "",
+        //      "refreshorderpending"
 
-        );
+        // );
             
            
-        if(!( $approveorder)) {
+        if($approveorder) {
             return response()->json([
                    'status' => 'success',
-                   'data' => $approveorder ,
-                   'datas' => $userid
+                  
+                    'data' => $approveorder ,
+                  // 'datas' => $userid
          ]);
        } 
+
+
         }
 
 
 
-
+ // get all orders for all users where status =0
 public function viewPendingOrderToAdmin()
 {
             
-                $view_orders = ordersModel::where('status','!=','4')        
+                $view_orders = ordersModel::
+                                            // where('status','!=','4') 
+                                           where('status',0)        
                                           ->with('address_rltn')
                                           ->get();  
                 
@@ -287,6 +292,86 @@ public function viewPendingOrderToAdmin()
                                     ]);
                 }
 }
+
+
+// get all orders where status !=0 (not pending), and status !=4 (not done)
+public function viewAcceptedOrdersToAdmin()
+{
+
+           $accepted_orders = ordersModel::
+                                       where('status','!=','0') 
+                                       ->where('status','!=','4')        
+                                       ->with('address_rltn')
+                                       ->get();  
+
+               if($accepted_orders->isNotEmpty()) {
+                           return response()->json([
+                                      'status' => 'success',
+                                      'data' => $accepted_orders,
+                           ]);
+                  }else{
+                         return response()->json([
+                         'status' => 'failure',
+                         'data' => 'No Accepted Orders Data Found  ',
+                       ]);
+              }
+}
+
+
+
+
+public function preparedOrdersShow($orderid, $userid) 
+{
+  $orders = ordersModel::find($orderid);
+  $users = User::find($userid); // to send notification
+  // $delivery = delivery_users::find($deliveryid); // to send notification
+
+     
+
+  if(!( $orders && $users)) {
+                return response()->json([
+                       'status' => 'failure',
+                       'data' => 'Not found this order-id ' . $orderid. 'this user-id ' .$userid   ,
+             ]);
+           }
+
+           if(delivery_users::where('order_type',0)) // delivery
+           {
+   $approveorder = ordersModel::where('id',$orderid)
+                              ->where('user_id',$userid) 
+                             // ->where('status',0)
+                                ->update(['status'=> 2]);  
+           }else {
+            $approveorder = ordersModel::where('id',$orderid) // personal 
+                              ->where('user_id',$userid) 
+                             // ->where('status',0)
+                                ->update(['status'=> 4]);  
+
+           }    
+
+      // notification for users
+
+      //   $result = (new TestController)->exampleFunction();  
+      // $notification = (new PushNotificationController)->bulksend(
+      //     //  $deliveryid,
+      //      "warning", //PushNotification(bulksend) لي بال  requset نفس ال 
+      //      "There is an  Order waiting to approved", //PushNotification(bulksend) لي بال  requset نفس ال 
+      //     //  "delivery$deliveryid", 
+      //      "",
+      //      "refreshorderpending"
+
+      // );
+          
+         
+      if(!( $approveorder)) {
+          return response()->json([
+                 'status' => 'success',
+                 'data' => $approveorder ,
+                 'datas' => $userid
+       ]);
+     }
+         
+      }
 
 
 // archive order wher status = 4 , archive تم إستلام الطلبيه
@@ -313,6 +398,8 @@ public function archiveOrderToAdmin()
 
 
 /************************************ADMIN*********************************************** */
+
+
 public function rating_for_archive_Order($orderid, Request $request)
 {
   $orders = ordersModel::find($orderid);
